@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OTO — موظف الاستقبال الذكي | Smart Receptionist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #07090f;
+  --bg2:      #0d1220;
+  --bg3:      #111827;
+  --teal:     #00c9a7;
+  --teal-dim: #00c9a720;
+  --gold:     #f0b429;
+  --text:     #e2ebe8;
+  --muted:    #8fa3a0;
+  --border:   #1e2d35;
+  --card:     #0d1824;
+  --wa:       #25D366;
+  --radius:   16px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Kufi Arabic', 'DM Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+body.en { direction: ltr; font-family: 'DM Sans', 'Noto Kufi Arabic', sans-serif; }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 6%;
+  background: rgba(7,9,15,0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  font-size: 1.6rem; font-weight: 900; letter-spacing: -1px;
+  color: var(--teal);
+}
+.nav-logo span { color: var(--gold); }
+
+.nav-right { display: flex; align-items: center; gap: 20px; }
+
+.lang-toggle {
+  background: var(--bg3); border: 1px solid var(--border);
+  color: var(--muted); padding: 6px 16px; border-radius: 50px;
+  font-size: 0.85rem; cursor: pointer; transition: all .2s;
+  font-family: inherit;
+}
+.lang-toggle:hover { border-color: var(--teal); color: var(--teal); }
+
+.nav-cta {
+  background: var(--teal); color: #07090f;
+  padding: 8px 22px; border-radius: 50px;
+  font-weight: 700; font-size: 0.9rem;
+  text-decoration: none; transition: all .2s;
+  border: none; cursor: pointer; font-family: inherit;
+}
+.nav-cta:hover { background: #00e8c1; transform: translateY(-1px); }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 60px;
+  padding: 120px 6% 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute; top: -200px; right: -200px;
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, var(--teal) 0%, transparent 65%);
+  opacity: 0.06; pointer-events: none;
+}
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--teal-dim); border: 1px solid var(--teal);
+  color: var(--teal); padding: 6px 16px; border-radius: 50px;
+  font-size: 0.82rem; font-weight: 600; margin-bottom: 28px;
+}
+.hero-badge::before { content: '●'; font-size: 0.5rem; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+.hero h1 {
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+  font-weight: 900;
+  line-height: 1.2;
+  margin-bottom: 24px;
+  letter-spacing: -1px;
+}
+.hero h1 em { font-style: normal; color: var(--teal); }
+.hero h1 .gold { color: var(--gold); }
+
+.hero-sub {
+  font-size: 1.1rem; color: var(--muted);
+  margin-bottom: 40px; max-width: 480px;
+  font-weight: 300;
+}
+
+.hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--wa); color: #fff;
+  padding: 14px 28px; border-radius: 50px;
+  font-weight: 700; font-size: 1rem;
+  text-decoration: none; transition: all .2s;
+  box-shadow: 0 8px 32px rgba(37,211,102,0.25);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(37,211,102,0.35); }
+
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: transparent; color: var(--text);
+  padding: 14px 28px; border-radius: 50px;
+  font-weight: 600; font-size: 1rem;
+  text-decoration: none; transition: all .2s;
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--teal); color: var(--teal); }
+
+/* ── CHAT MOCKUP ── */
+.hero-visual {
+  position: relative;
+  display: flex; justify-content: center; align-items: center;
+}
+
+.phone-frame {
+  width: 300px;
+  background: #1a1a2e;
+  border-radius: 36px;
+  border: 2px solid var(--border);
+  overflow: hidden;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);
+  position: relative;
+}
+
+.phone-header {
+  background: #075e54;
+  padding: 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+.phone-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--teal);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+}
+.phone-info { flex: 1; }
+.phone-name { font-size: 0.9rem; font-weight: 700; color: #fff; }
+.phone-status { font-size: 0.72rem; color: rgba(255,255,255,0.6); }
+
+.chat-body { padding: 16px; background: #0d1117; min-height: 380px; }
+
+.msg {
+  max-width: 80%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 0.82rem;
+  margin-bottom: 10px;
+  line-height: 1.5;
+  opacity: 0;
+  transform: translateY(12px);
+  animation: msgIn .4s forwards;
+}
+.msg.bot {
+  background: var(--bg3);
+  border-radius: 14px 14px 14px 4px;
+  color: var(--text);
+  align-self: flex-start;
+}
+.msg.user {
+  background: #005c4b;
+  border-radius: 14px 14px 4px 14px;
+  color: #fff;
+  margin-right: auto; margin-left: auto;
+  margin-left: 20%;
+  direction: rtl;
+}
+.msg.user.ltr-msg { direction: ltr; }
+
+@keyframes msgIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.msg:nth-child(1) { animation-delay: 0.3s; }
+.msg:nth-child(2) { animation-delay: 1.0s; }
+.msg:nth-child(3) { animation-delay: 1.8s; }
+.msg:nth-child(4) { animation-delay: 2.6s; }
+.msg:nth-child(5) { animation-delay: 3.4s; }
+.msg:nth-child(6) { animation-delay: 4.2s; }
+
+.msg-time { font-size: 0.65rem; color: rgba(255,255,255,0.4); margin-top: 4px; text-align: left; }
+
+/* ── STATS BAR ── */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin: 80px 6% 0;
+}
+.stat {
+  background: var(--bg2);
+  padding: 36px 32px;
+  text-align: center;
+}
+.stat-num {
+  font-size: 2.4rem; font-weight: 900;
+  color: var(--teal); letter-spacing: -2px; display: block;
+}
+.stat-label { font-size: 0.9rem; color: var(--muted); margin-top: 6px; }
+
+/* ── SECTION ── */
+section { padding: 100px 6%; }
+
+.section-tag {
+  display: inline-block;
+  background: var(--teal-dim); color: var(--teal);
+  padding: 5px 14px; border-radius: 50px;
+  font-size: 0.8rem; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; margin-bottom: 18px;
+}
+.section-title {
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  font-weight: 900; line-height: 1.2;
+  letter-spacing: -1px; margin-bottom: 16px;
+}
+.section-sub { font-size: 1.05rem; color: var(--muted); max-width: 520px; }
+
+/* ── HOW IT WORKS ── */
+.how { background: var(--bg2); }
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  margin-top: 60px;
+}
+
+.step {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 36px 28px;
+  position: relative;
+  transition: border-color .3s, transform .3s;
+}
+.step:hover { border-color: var(--teal); transform: translateY(-4px); }
+
+.step-num {
+  width: 48px; height: 48px;
+  background: var(--teal-dim);
+  border: 1px solid var(--teal);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; font-weight: 900; color: var(--teal);
+  margin-bottom: 20px;
+}
+.step h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 10px; }
+.step p { font-size: 0.92rem; color: var(--muted); line-height: 1.7; }
+
+.step-connector {
+  display: none;
+}
+
+/* ── FEATURES ── */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-top: 60px;
+}
+
+.feature-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  transition: all .3s;
+  position: relative;
+  overflow: hidden;
+}
+.feature-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--teal), transparent);
+  opacity: 0; transition: opacity .3s;
+}
+.feature-card:hover { border-color: var(--teal); transform: translateY(-3px); }
+.feature-card:hover::before { opacity: 1; }
+
+.feature-icon {
+  font-size: 2rem; margin-bottom: 18px;
+}
+.feature-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; }
+.feature-card p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
+
+/* ── PRICING ── */
+.pricing { background: var(--bg2); }
+
+.pricing-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 60px;
+}
+
+.pricing-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 36px 28px;
+  transition: all .3s;
+  position: relative;
+}
+.pricing-card.featured {
+  border-color: var(--teal);
+  background: linear-gradient(135deg, #0d2420, var(--card));
+}
+.pricing-card.featured::before {
+  content: attr(data-badge);
+  position: absolute; top: -12px; right: 24px;
+  background: var(--teal); color: #07090f;
+  padding: 4px 14px; border-radius: 50px;
+  font-size: 0.75rem; font-weight: 700;
+}
+
+.plan-name { font-size: 0.85rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px; }
+.plan-price {
+  font-size: 2.8rem; font-weight: 900; letter-spacing: -2px;
+  color: var(--text); line-height: 1;
+}
+.plan-price span { font-size: 1rem; font-weight: 400; color: var(--muted); }
+.plan-desc { font-size: 0.88rem; color: var(--muted); margin: 12px 0 24px; }
+
+.plan-features { list-style: none; margin-bottom: 32px; }
+.plan-features li {
+  font-size: 0.88rem; color: var(--muted);
+  padding: 8px 0; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+.plan-features li::before { content: '✓'; color: var(--teal); font-weight: 700; flex-shrink: 0; }
+
+.plan-btn {
+  display: block; text-align: center;
+  padding: 13px; border-radius: 50px;
+  font-weight: 700; font-size: 0.95rem;
+  text-decoration: none; transition: all .2s;
+  border: 1px solid var(--border); color: var(--text);
+  font-family: inherit; cursor: pointer; background: transparent;
+}
+.pricing-card.featured .plan-btn {
+  background: var(--teal); color: #07090f; border-color: var(--teal);
+}
+.plan-btn:hover { border-color: var(--teal); color: var(--teal); }
+.pricing-card.featured .plan-btn:hover { background: #00e8c1; }
+
+/* ── CTA ── */
+.cta-section {
+  text-align: center;
+  padding: 120px 6%;
+  position: relative;
+  overflow: hidden;
+}
+.cta-section::before {
+  content: '';
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  width: 800px; height: 400px;
+  background: radial-gradient(ellipse, var(--teal) 0%, transparent 65%);
+  opacity: 0.05; pointer-events: none;
+}
+.cta-section h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 900; letter-spacing: -1px; margin-bottom: 20px;
+}
+.cta-section p { font-size: 1.1rem; color: var(--muted); margin-bottom: 40px; }
+.cta-actions { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 40px 6%;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 20px;
+}
+.footer-logo { font-size: 1.3rem; font-weight: 900; color: var(--teal); }
+.footer-logo span { color: var(--gold); }
+.footer-copy { font-size: 0.85rem; color: var(--muted); }
+.footer-links { display: flex; gap: 24px; }
+.footer-links a { font-size: 0.85rem; color: var(--muted); text-decoration: none; transition: color .2s; }
+.footer-links a:hover { color: var(--teal); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; padding-top: 100px; text-align: center; }
+  .hero-sub { max-width: 100%; }
+  .hero-actions { justify-content: center; }
+  .hero-visual { display: none; }
+  .steps { grid-template-columns: 1fr; }
+  .features-grid { grid-template-columns: 1fr; }
+  .pricing-cards { grid-template-columns: 1fr; }
+  .stats-bar { grid-template-columns: 1fr; }
+  footer { flex-direction: column; align-items: center; text-align: center; }
+}
+
+/* ── SCROLL REVEAL ── */
+.reveal {
+  opacity: 0; transform: translateY(30px);
+  transition: opacity .7s ease, transform .7s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* Arabic-specific overrides */
+html[dir="rtl"] .msg.user { margin-right: 20%; margin-left: 0; }
+html[dir="ltr"] .msg.user { margin-left: 20%; margin-right: 0; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">OTO<span>.</span></div>
+  <div class="nav-right">
+    <button class="lang-toggle" onclick="toggleLang()" id="langBtn">EN</button>
+    <a href="#contact" class="nav-cta" id="navCta">ابدأ الآن</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-content">
+    <div class="hero-badge" id="heroBadge">المحرك الذكي لأعمالك</div>
+    <h1 id="heroTitle">
+      احجز أكثر.<br>
+      اشتغل <em>أقل.</em><br>
+      <span class="gold">24/7.</span>
+    </h1>
+    <p class="hero-sub" id="heroSub">
+      OTO يرد على عملائك على واتساب، يحجز المواعيد، ويزامن مع تقويمك — بدون ما تحرك إصبعك.
+    </p>
+    <div class="hero-actions">
+      <a href="https://wa.me/97333800000" class="btn-primary" id="heroCta1">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        احجز عرضاً تجريبياً
+      </a>
+      <a href="#how" class="btn-secondary" id="heroCta2">كيف يشتغل؟</a>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="phone-frame">
+      <div class="phone-header">
+        <div class="phone-avatar">🦷</div>
+        <div class="phone-info">
+          <div class="phone-name" id="phoneName">عيادة الابتسامة</div>
+          <div class="phone-status" id="phoneStatus">نور • متصل الآن</div>
+        </div>
+      </div>
+      <div class="chat-body" id="chatBody">
+        <div class="msg bot" id="chat1">مرحباً! 👋 كيف أقدر أساعدك اليوم؟</div>
+        <div class="msg user" id="chat2">ابي احجز موعد كشف</div>
+        <div class="msg bot" id="chat3">⏳ جاري التحقق من المواعيد...<br><br>أقرب موعد متاح الأحد 22 مارس الساعة ٩ صباحاً ✅</div>
+        <div class="msg user" id="chat4">تمام حجز</div>
+        <div class="msg bot" id="chat5">✅ تم تأكيد موعدك!<br>📅 الأحد 22 مارس — ٩:٠٠ صباحاً<br>نراك قريباً 😊</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat reveal">
+    <span class="stat-num">24/7</span>
+    <div class="stat-label" id="stat1">رد فوري في أي وقت</div>
+  </div>
+  <div class="stat reveal">
+    <span class="stat-num" id="stat2num">-80%</span>
+    <div class="stat-label" id="stat2">وقت الاستقبال اليدوي</div>
+  </div>
+  <div class="stat reveal">
+    <span class="stat-num">2</span>
+    <div class="stat-label" id="stat3">دقيقة لإتمام الحجز</div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="section-tag" id="howTag">كيف يشتغل</div>
+  <h2 class="section-title reveal" id="howTitle">من رسالة واتساب إلى موعد مؤكد</h2>
+  <p class="section-sub reveal" id="howSub">ثلاث خطوات بسيطة. بدون تدخل بشري.</p>
+  <div class="steps">
+    <div class="step reveal">
+      <div class="step-num">١</div>
+      <h3 id="step1h">المريض يرسل رسالة</h3>
+      <p id="step1p">يكتب العميل على واتساب بشكل طبيعي — بالعربي أو الإنجليزي، وعامية الخليج مفهومة.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">٢</div>
+      <h3 id="step2h">OTO يفهم ويرد</h3>
+      <p id="step2p">الذكاء الاصطناعي يفهم الطلب، يتحقق من جدول الأطباء، ويعرض الأوقات المتاحة فوراً.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">٣</div>
+      <h3 id="step3h">الموعد يُسجّل تلقائياً</h3>
+      <p id="step3p">يُحجز الموعد في Google Calendar للطبيب مباشرةً، ويُرسل تأكيد للمريض في نفس الدقيقة.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-tag" id="featTag">المميزات</div>
+  <h2 class="section-title reveal" id="featTitle">كل شيء يحتاجه عملك</h2>
+  <p class="section-sub reveal" id="featSub">مصمم خصيصاً للأعمال في البحرين والخليج.</p>
+  <div class="features-grid">
+    <div class="feature-card reveal">
+      <div class="feature-icon">🗓️</div>
+      <h3 id="f1h">حجز مواعيد ذكي</h3>
+      <p id="f1p">يتحقق من الأوقات المتاحة لكل موظف، يحجز، ويرسل تأكيداً — بدون تدخل بشري.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">🔔</div>
+      <h3 id="f2h">تذكيرات تلقائية</h3>
+      <p id="f2p">يُرسل تذكيراً قبل 24 ساعة مع خيار التأكيد أو التغيير. يقلل حالات عدم الحضور بشكل كبير.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">🌐</div>
+      <h3 id="f3h">عربي وإنجليزي</h3>
+      <p id="f3p">يفهم اللهجة الخليجية والإنجليزية والدارجة مع الأخطاء الإملائية — كما يتكلم الناس فعلاً.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">📋</div>
+      <h3 id="f4h">تسجيل المرضى الجدد</h3>
+      <p id="f4p">يجمع بيانات العميل عبر مسح بطاقة الهوية (CPR) أو الإدخال اليدوي ويحفظها في الموعد.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">🔄</div>
+      <h3 id="f5h">إلغاء وتغيير سهل</h3>
+      <p id="f5p">العميل يقدر يلغي أو يغير موعده مباشرةً من الواتساب. تستلم إشعاراً فوراً.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">👨‍⚕️</div>
+      <h3 id="f6h">دعم متعدد الأطباء</h3>
+      <p id="f6p">كل موظف له تقويمه الخاص. OTO يوزع المواعيد بذكاء ويجد أقرب موعد متاح.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="section-tag" id="priceTag">الأسعار</div>
+  <h2 class="section-title reveal" id="priceTitle">استثمار يعود عليك من اليوم الأول</h2>
+  <p class="section-sub reveal" id="priceSub">OTO يشتغل 24/7، يرد فورياً، ولا يأخذ إجازة. خطط مرنة تناسب حجم عملك.</p>
+  <div class="pricing-cards">
+    <div class="pricing-card reveal">
+      <div class="plan-name" id="plan1name">أعمال صغيرة</div>
+      <div class="plan-price">45 <span id="plan1unit">BD / شهر</span></div>
+      <div class="plan-desc" id="plan1desc">مناسب لـ 1-2 أطباء</div>
+      <ul class="plan-features" id="plan1features">
+        <li>حجز مواعيد تلقائي</li>
+        <li>تذكيرات يومية</li>
+        <li>إلغاء وتغيير</li>
+        <li>دعم عربي وإنجليزي</li>
+      </ul>
+      <button class="plan-btn" onclick="openWhatsApp()" id="plan1btn">تواصل معنا</button>
+    </div>
+    <div class="pricing-card featured reveal" data-badge="الأكثر طلباً">
+      <div class="plan-name" id="plan2name">أعمال متوسطة</div>
+      <div class="plan-price">75 <span id="plan2unit">BD / شهر</span></div>
+      <div class="plan-desc" id="plan2desc">مناسب لـ 3-5 أطباء</div>
+      <ul class="plan-features" id="plan2features">
+        <li>كل مميزات الخطة الصغيرة</li>
+        <li>مسح بطاقة الهوية (CPR)</li>
+        <li>تسجيل المرضى الجدد</li>
+        <li>إشعارات فورية للعيادة</li>
+        <li>دعم أولوية</li>
+      </ul>
+      <button class="plan-btn" onclick="openWhatsApp()" id="plan2btn">تواصل معنا</button>
+    </div>
+    <div class="pricing-card reveal">
+      <div class="plan-name" id="plan3name">أعمال كبيرة</div>
+      <div class="plan-price">120 <span id="plan3unit">BD / شهر</span></div>
+      <div class="plan-desc" id="plan3desc">6 أطباء أو أكثر</div>
+      <ul class="plan-features" id="plan3features">
+        <li>كل مميزات الخطة المتوسطة</li>
+        <li>+6 أطباء وتقاويم</li>
+        <li>تقارير شهرية</li>
+        <li>إعداد مخصص كامل</li>
+        <li>دعم مباشر 7/7</li>
+      </ul>
+      <button class="plan-btn" onclick="openWhatsApp()" id="plan3btn">تواصل معنا</button>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <h2 class="reveal" id="ctaTitle">جاهز تشوف الفرق؟</h2>
+  <p class="reveal" id="ctaSub">تواصل معنا على واتساب وسنعمل عرضاً تجريبياً مباشراً لعيادتك.</p>
+  <div class="cta-actions reveal">
+    <a href="https://wa.me/97333800000" class="btn-primary" id="ctaBtn1">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      ابدأ العرض التجريبي
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">OTO<span>.</span></div>
+  <div class="footer-copy" id="footerCopy">© 2026 OTO. جميع الحقوق محفوظة.</div>
+  <div class="footer-links">
+    <a href="#how" id="footLink1">كيف يشتغل</a>
+    <a href="#features" id="footLink2">المميزات</a>
+    <a href="#contact" id="footLink3">تواصل</a>
+  </div>
+</footer>
+
+<script>
+// ── Language toggle ──────────────────────────────────────────────────────────
+const ar = {
+  lang: 'ar', dir: 'rtl',
+  langBtn: 'EN',
+  navCta: 'ابدأ الآن',
+  heroBadge: 'المحرك الذكي لأعمالك',
+  heroTitle: 'احجز أكثر.<br>اشتغل <em>أقل.</em><br><span class="gold">24/7.</span>',
+  heroSub: 'OTO يرد على عملائك على واتساب، يحجز المواعيد، ويزامن مع تقويمك — بدون ما تحرك إصبعك.',
+  heroCta1: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> احجز عرضاً تجريبياً',
+  heroCta2: 'كيف يشتغل؟',
+  phoneName: 'عيادة الابتسامة', phoneStatus: 'نور • متصل الآن',
+  stat1: 'رد فوري في أي وقت', stat2num: '-80%', stat2: 'وقت الاستقبال اليدوي', stat3: 'دقيقة لإتمام الحجز',
+  howTag: 'كيف يشتغل', howTitle: 'من رسالة واتساب إلى موعد مؤكد', howSub: 'ثلاث خطوات بسيطة. بدون تدخل بشري.',
+  step1h: 'المريض يرسل رسالة', step1p: 'يكتب العميل على واتساب بشكل طبيعي — بالعربي أو الإنجليزي، وعامية الخليج مفهومة.',
+  step2h: 'OTO يفهم ويرد', step2p: 'الذكاء الاصطناعي يفهم الطلب، يتحقق من جدول الأطباء، ويعرض الأوقات المتاحة فوراً.',
+  step3h: 'الموعد يُسجّل تلقائياً', step3p: 'يُحجز الموعد في Google Calendar للطبيب مباشرةً، ويُرسل تأكيد للمريض في نفس الدقيقة.',
+  featTag: 'المميزات', featTitle: 'كل شيء يحتاجه عملك', featSub: 'مصمم خصيصاً للأعمال في البحرين والخليج.',
+  f1h: 'حجز مواعيد ذكي', f1p: 'يتحقق من الأوقات المتاحة لكل موظف، يحجز، ويرسل تأكيداً — بدون تدخل بشري.',
+  f2h: 'تذكيرات تلقائية', f2p: 'يُرسل تذكيراً قبل 24 ساعة مع خيار التأكيد أو التغيير. يقلل حالات عدم الحضور بشكل كبير.',
+  f3h: 'عربي وإنجليزي', f3p: 'يفهم اللهجة الخليجية والإنجليزية والدارجة مع الأخطاء الإملائية — كما يتكلم عملاؤك فعلاً.',
+  f4h: 'تسجيل المرضى الجدد', f4p: 'يجمع بيانات العميل عبر مسح بطاقة الهوية (CPR) أو الإدخال اليدوي ويحفظها في الموعد.',
+  f5h: 'إلغاء وتغيير سهل', f5p: 'العميل يقدر يلغي أو يغير موعده مباشرةً من الواتساب. تستلم إشعاراً فوراً.',
+  f6h: 'دعم متعدد الأطباء', f6p: 'كل موظف له تقويمه الخاص. OTO يوزع المواعيد بذكاء ويجد أقرب موعد متاح.',
+  priceTag: 'الأسعار', priceTitle: 'استثمار يعود عليك من اليوم الأول', priceSub: 'OTO يشتغل 24/7، يرد فورياً، ولا يأخذ إجازة. خطط مرنة تناسب حجم عملك.',
+  plan1name: 'أعمال صغيرة', plan1unit: 'BD / شهر', plan1desc: 'مناسب لـ 1-2 أطباء',
+  plan2name: 'أعمال متوسطة', plan2unit: 'BD / شهر', plan2desc: 'مناسب لـ 3-5 أطباء',
+  plan3name: 'أعمال كبيرة', plan3unit: 'BD / شهر', plan3desc: '6 أطباء أو أكثر',
+  plan1btn: 'تواصل معنا', plan2btn: 'تواصل معنا', plan3btn: 'تواصل معنا',
+  ctaTitle: 'جاهز تشوف الفرق؟', ctaSub: 'تواصل معنا على واتساب وسنعمل عرضاً تجريبياً مباشراً لعيادتك.',
+  footerCopy: '© 2026 OTO. جميع الحقوق محفوظة.',
+  footLink1: 'كيف يشتغل', footLink2: 'المميزات', footLink3: 'تواصل',
+  chat1: 'مرحباً! 👋 كيف أقدر أساعدك اليوم؟',
+  chat2: 'ابي احجز موعد كشف',
+  chat3: '⏳ جاري التحقق من المواعيد...<br><br>أقرب موعد متاح الأحد 22 مارس الساعة ٩ صباحاً ✅',
+  chat4: 'تمام حجز',
+  chat5: '✅ تم تأكيد موعدك!<br>📅 الأحد 22 مارس — ٩:٠٠ صباحاً<br>نراك قريباً 😊',
+};
+
+const en = {
+  lang: 'en', dir: 'ltr',
+  langBtn: 'AR',
+  navCta: 'Get Started',
+  heroBadge: 'The AI Engine for Your Business',
+  heroTitle: 'Book More.<br><em>Work Less.</em><br><span class="gold">24/7.</span>',
+  heroSub: 'OTO replies to your clients on WhatsApp, books appointments, and syncs with your calendar — automatically.',
+  heroCta1: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> Book a Demo',
+  heroCta2: 'How it works',
+  phoneName: 'Al Ibtisama Clinic', phoneStatus: 'Noor • Online',
+  stat1: 'Instant replies, any hour', stat2num: '-80%', stat2: 'Manual receptionist time', stat3: 'Minutes to complete booking',
+  howTag: 'How It Works', howTitle: 'From WhatsApp Message to Confirmed Appointment', howSub: 'Three simple steps. Zero human involvement.',
+  step1h: 'Patient sends a message', step1p: 'They message your WhatsApp naturally — in Arabic, English, or Gulf dialect. No new app needed.',
+  step2h: 'OTO understands and replies', step2p: 'The AI understands the request, checks each doctor\'s calendar, and instantly offers available time slots.',
+  step3h: 'Appointment booked automatically', step3p: 'The slot is saved directly to the doctor\'s Google Calendar and a confirmation is sent to the patient immediately.',
+  featTag: 'Features', featTitle: 'Everything Your Business Needs', featSub: 'Built specifically for businesses in Bahrain and the Gulf.',
+  f1h: 'Smart Appointment Booking', f1p: 'Checks real-time availability per team member, books the slot, and sends confirmation — fully automated.',
+  f2h: 'Automatic Reminders', f2p: 'Sends a reminder 24 hours before with confirm or reschedule options. Significantly reduces missed appointments.',
+  f3h: 'Arabic & English', f3p: 'Understands Gulf dialect, English, and mixed messages with typos — exactly how your clients actually type.',
+  f4h: 'New Patient Registration', f4p: 'Collects client info by scanning the CPR card or manual entry, stored directly in the appointment.',
+  f5h: 'Easy Cancel & Reschedule', f5p: 'Clients cancel or reschedule directly on WhatsApp. You get an instant notification.',
+  f6h: 'Multi-Doctor Support', f6p: 'Every team member has their own calendar. OTO distributes appointments intelligently across the whole team.',
+  priceTag: 'Pricing', priceTitle: 'An Investment That Pays From Day One', priceSub: 'OTO works 24/7, replies instantly, and never takes a day off. Flexible plans that grow with your business.',
+  plan1name: 'Small Business', plan1unit: 'BD / month', plan1desc: 'Up to 2 doctors',
+  plan2name: 'Medium Business', plan2unit: 'BD / month', plan2desc: '3–5 doctors',
+  plan3name: 'Large Business', plan3unit: 'BD / month', plan3desc: '6+ doctors',
+  plan1btn: 'Contact Us', plan2btn: 'Contact Us', plan3btn: 'Contact Us',
+  ctaTitle: 'Ready to See the Difference?', ctaSub: 'Message us on WhatsApp and we\'ll run a live demo for your clinic.',
+  footerCopy: '© 2026 OTO. All rights reserved.',
+  footLink1: 'How It Works', footLink2: 'Features', footLink3: 'Contact',
+  chat1: 'Hello! 👋 How can I help you today?',
+  chat2: 'I need to book a consultation',
+  chat3: '⏳ Checking availability...<br><br>Next available slot: Sun 22 Mar at 9:00 AM ✅',
+  chat4: 'Perfect, book it',
+  chat5: '✅ Appointment confirmed!<br>📅 Sun 22 Mar — 9:00 AM<br>See you soon 😊',
+};
+
+let currentLang = 'ar';
+
+function applyLang(data) {
+  document.documentElement.lang = data.lang;
+  document.documentElement.dir = data.dir;
+  document.body.classList.toggle('en', data.lang === 'en');
+  Object.keys(data).forEach(id => {
+    const el = document.getElementById(id);
+    if (el && id !== 'lang' && id !== 'dir') el.innerHTML = data[id];
+  });
+}
+
+function toggleLang() {
+  currentLang = currentLang === 'ar' ? 'en' : 'ar';
+  applyLang(currentLang === 'ar' ? ar : en);
+}
+
+function openWhatsApp() {
+  window.open('https://wa.me/97333800000', '_blank');
+}
+
+// ── Scroll reveal ─────────────────────────────────────────────────────────────
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
